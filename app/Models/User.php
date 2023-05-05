@@ -22,8 +22,8 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
-        'email', 
-        'phone', 
+        'email',
+        'phone',
         'address',
         'password',
         'is_active',
@@ -45,7 +45,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime', 
+        'email_verified_at' => 'datetime',
         'is_active' => 'boolean'
     ];
 
@@ -57,15 +57,20 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+    public function getRoleAttribute()
+    {
+        return $this->getRoleNames();
+    }
+
     public function scopeSearch($query, $term)
     {
         $term = "%$term%";
 
         $query->where(function ($query) use ($term) {
             $query->where('name', 'like', $term)
-            ->orWhere('username', 'like', $term)
-            ->orWhere('email', 'like', $term)
-            ->orWhere('phone', 'like', $term);
+                ->orWhere('username', 'like', $term)
+                ->orWhere('email', 'like', $term)
+                ->orWhere('phone', 'like', $term);
         });
     }
 }
