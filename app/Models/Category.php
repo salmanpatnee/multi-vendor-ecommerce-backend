@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Brand extends Model
+class Category extends Model
 {
-    use HasFactory, SoftDeletes, Sluggable;
+    use HasFactory, sluggable, SoftDeletes;
 
-    protected $fillable = ['name', 'slug', 'image'];
+    protected $fillable = ['category_id', 'name', 'slug', 'image'];
 
     public function sluggable(): array
     {
@@ -20,6 +20,16 @@ class Brand extends Model
                 'source' => 'name'
             ]
         ];
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'category_id');
     }
 
     public function scopeSearch($query, $term)

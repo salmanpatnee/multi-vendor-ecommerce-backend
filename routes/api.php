@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BrandsController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -32,6 +34,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-
-    Route::resource('users', UsersController::class);
+    Route::apiResource('users', UsersController::class);
+    Route::apiResource('brands', BrandsController::class);
+    Route::apiResource('categories', CategoriesController::class);
 });
