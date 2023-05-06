@@ -9,7 +9,8 @@ class UserPolicy
 {
     public function before(User $user, string $ability): bool|null
     {
-        return in_array('Administrator', $user->role) ? true : null;
+        // return in_array('Administrator', $user->role) ? true : null;
+        return $user->role->contains('Administrator') ? true : null;
     }
 
 
@@ -19,7 +20,7 @@ class UserPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->role->contains('Administrator') ? true : false;
     }
 
     /**
@@ -27,7 +28,7 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        //
+        return $user->id === $model->id;
     }
 
     /**
@@ -35,7 +36,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return in_array('Administrator', $user->role);
+        return $user->role->contains('Administrator') ? true : false;
     }
 
     /**

@@ -1,0 +1,2 @@
+Update password api with old password validation.
+Add profile picture in user profile
