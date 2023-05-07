@@ -15,9 +15,14 @@ class AuthController extends Controller
     {
         $attributes = $request->validated();
 
+        if ($attributes['role'] === 'Vendor') {
+            $attributes['is_active'] = 0;
+        }
+
         $user = User::create($attributes);
 
         $user->assignRole($request->role);
+
 
         return (new UserResource($user))
             ->additional([

@@ -24,6 +24,7 @@ class UserUpdateRequest extends FormRequest
         return [
             'name'      => 'required|string|min:3|max:255',
             'username'     => 'required|string|max:255|unique:users,username,' . $this->user->id,
+            'shop_name'     => 'required_if:role,Vendor|string|max:255',
             'email'     => 'required|email|max:255|unique:users,email,' . $this->user->id,
             'phone'     => 'nullable|string|max:255|unique:users,phone,' . $this->user->id,
             'address'     => 'nullable|string',

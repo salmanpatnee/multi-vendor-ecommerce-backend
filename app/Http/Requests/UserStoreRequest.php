@@ -24,6 +24,7 @@ class UserStoreRequest extends FormRequest
         return [
             'name'      => 'required|string|min:3|max:255',
             'username'     => 'required|string|max:255|unique:users,username',
+            'shop_name'     => 'required_if:role,Vendor|string|max:255',
             'email'     => 'required|email|max:255|unique:users,email',
             'phone'     => 'nullable|string|max:255|unique:users,phone',
             'address'     => 'nullable|string',

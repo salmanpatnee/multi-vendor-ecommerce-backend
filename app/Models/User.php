@@ -22,6 +22,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
+        'shop_name',
         'email',
         'phone',
         'address',
@@ -57,6 +58,7 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
 
+
     public function getRoleAttribute()
     {
         return $this->getRoleNames();
@@ -72,5 +74,10 @@ class User extends Authenticatable
                 ->orWhere('email', 'like', $term)
                 ->orWhere('phone', 'like', $term);
         });
+    }
+
+    public function scopeActive($query)
+    {
+        $query->where('is_active', '=', 1);
     }
 }

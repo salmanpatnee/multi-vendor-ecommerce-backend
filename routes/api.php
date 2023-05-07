@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\VendorsController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -35,6 +36,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::apiResource('users', UsersController::class);
+    Route::apiResource('vendors', VendorsController::class);
     Route::apiResource('brands', BrandsController::class);
     Route::apiResource('categories', CategoriesController::class);
 });
