@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ee6a594c-59d6-4d1d-aff6-8ac15aff0dbd",
+		"_postman_id": "4fc5f8de-8e69-403c-a37f-f05a0c0585a6",
 		"name": "Multi Vendor Ecommerce",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -468,7 +468,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/vendors",
+							"raw": "{{baseUrl}}/vendors?active=1",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -490,6 +490,10 @@
 									"key": "sortOrder",
 									"value": "Asc",
 									"disabled": true
+								},
+								{
+									"key": "active",
+									"value": "1"
 								}
 							]
 						}
@@ -543,7 +547,7 @@
 					"response": []
 				},
 				{
-					"name": "Users Update",
+					"name": "Vendors Update",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -570,23 +574,67 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":  \"Adnan\", \r\n    \"username\":  \"adnan\", \r\n    \"email\": \"adnan@gmail.com\", \r\n    \"phone\": \"789 654 123\", \r\n    \"address\": \"Karachi Pakistan\", \r\n    \"role\": \"Vendor\"\r\n}"
+							"raw": "{\r\n    \"name\":  \"Adnan\", \r\n    \"username\":  \"adnan\",  \r\n    \"shop_name\":  \"adnan shop\", \r\n    \"email\": \"adnan@gmail.com\", \r\n    \"phone\": \"789 654 123\", \r\n    \"address\": \"Karachi Pakistan\", \r\n    \"role\": \"Vendor\"\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/users/4",
+							"raw": "{{baseUrl}}/users/2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"users",
-								"4"
+								"2"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Users Delete",
+					"name": "Vendors Active/Deactive",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer {{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"is_active\":  false\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/toggle-active/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"toggle-active",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vendor Delete",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -616,20 +664,20 @@
 							"formdata": []
 						},
 						"url": {
-							"raw": "{{baseUrl}}/users/3",
+							"raw": "{{baseUrl}}/vendors/2",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"users",
-								"3"
+								"vendors",
+								"2"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "New Store",
+					"name": "Vendors Store",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -659,22 +707,22 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Adnan",
+									"value": "Hamza1",
 									"type": "default"
 								},
 								{
 									"key": "username",
-									"value": "adnan",
+									"value": "hamza1",
 									"type": "default"
 								},
 								{
 									"key": "email",
-									"value": "adnan@gmail.com",
+									"value": "hamz1a@gmail.com",
 									"type": "default"
 								},
 								{
 									"key": "phone",
-									"value": "789 654 123",
+									"value": "789 654 129",
 									"type": "default"
 								},
 								{
@@ -694,7 +742,12 @@
 								},
 								{
 									"key": "role",
-									"value": "Customer",
+									"value": "Vendor",
+									"type": "default"
+								},
+								{
+									"key": "shop_name",
+									"value": "Hamza Shop",
 									"type": "default"
 								}
 							]
@@ -1213,6 +1266,262 @@
 							],
 							"path": [
 								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Categories Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer {{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"GYM\", \r\n    \"slug\": \"gym\"\r\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Products Index",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer {{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "or",
+									"disabled": true
+								},
+								{
+									"key": "paginate",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "sortOrder",
+									"value": "Asc",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Product Show",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer {{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"1"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "or",
+									"disabled": true
+								},
+								{
+									"key": "paginate",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "sortOrder",
+									"value": "Asc",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Product Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer {{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/products/21",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Products Store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "Bearer {{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Demo",
+									"type": "default"
+								},
+								{
+									"key": "price",
+									"value": "1500",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
 							]
 						}
 					},
