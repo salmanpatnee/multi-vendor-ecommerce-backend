@@ -76,8 +76,13 @@ class User extends Authenticatable
         });
     }
 
-    public function scopeActive($query)
+    public function scopeActive($query, $active)
     {
-        $query->where('is_active', '=', 1);
+        $query->where('is_active', '=', $active);
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

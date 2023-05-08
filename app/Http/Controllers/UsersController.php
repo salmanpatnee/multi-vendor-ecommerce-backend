@@ -96,4 +96,13 @@ class UsersController extends Controller
             'status'  => 'success'
         ], Response::HTTP_OK);
     }
+
+    public function toggleActive(User $user)
+    {
+        $user->is_active = !$user->is_active;
+        $user->update();
+
+        return response("Status updated.");
+
+    }
 }

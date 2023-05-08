@@ -2,23 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
-use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Resources\ProductResource;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class VendorsController extends Controller
+class ProductsController extends Controller
 {
-    /**
-     * Create the controller instance.
-     */
-    public function __construct()
-    {
-        $this->authorizeResource(User::class, 'vendor');
-    }
-
-
     /**
      * Display a listing of the resource.
      */
@@ -26,35 +17,39 @@ class VendorsController extends Controller
     {
         $paginate = request('paginate', 10);
         $term     = request('search', '');
-        $active     = request('active', '');
         $sortOrder  = request('sortOrder', 'desc');
         $orderBy    = request('orderBy', 'name');
 
-        $users = User::role('Vendor')->search($term)->active($active)
+        $products = Product::search($term)
             ->orderBy($orderBy, $sortOrder)
             ->paginate($paginate);
 
-        return UserResource::collection($users);
+        return ProductResource::collection($products);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        //
+        $attributes = $request->validated();
+
+        $product = Product::create($attributes);
+
+        return (new ProductResource($product))
+            ->additional([
+                'message' => 'Product created successfully.',
+                'status' => 'success'
+            ])->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(Product $product)
     {
-        if (!$user->role->contains('Vendor')) {
-            throw new ModelNotFoundException();
-        }
-
-        return new UserResource($user);
+        return new ProductResource($product);
     }
 
     /**
@@ -68,16 +63,12 @@ class VendorsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(Product $product)
     {
-        if (!$user->role->contains('Vendor')) {
-            throw new ModelNotFoundException();
-        }
-
-        $user->delete();
+        $product->delete();
 
         return response([
-            'message' => 'Vendor deleted successfully.',
+            'message' => 'Product deleted successfully.',
             'status'  => 'success'
         ], Response::HTTP_OK);
     }

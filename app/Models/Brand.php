@@ -31,4 +31,9 @@ class Brand extends Model
                 ->orWhere('slug', 'like', $term);
         });
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

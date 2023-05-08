@@ -5,14 +5,12 @@ namespace App\Policies;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class UserPolicy
+class VendorPolicy
 {
     public function before(User $user, string $ability): bool|null
     {
         return $user->role->contains('Administrator') ? true : null;
     }
-
-
 
     /**
      * Determine whether the user can view any models.

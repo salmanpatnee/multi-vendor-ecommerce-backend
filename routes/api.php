@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VendorsController;
 use App\Models\User;
@@ -35,8 +36,10 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::patch('users/toggle-active/{user}', [UsersController::class, 'toggleActive']);
     Route::apiResource('users', UsersController::class);
-    Route::apiResource('vendors', VendorsController::class);
+    Route::apiResource('vendors', VendorsController::class)->except(['store', 'update']);
     Route::apiResource('brands', BrandsController::class);
     Route::apiResource('categories', CategoriesController::class);
+    Route::apiResource('products', ProductsController::class);
 });
