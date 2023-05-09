@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -32,9 +33,34 @@ class ProductsController extends Controller
      */
     public function store(ProductStoreRequest $request)
     {
+
         $attributes = $request->validated();
 
+        $category_ids = $attributes['category_id'];
+        unset($attributes['category_id']);
+
+        if ($request->hasFile('image')) {
+            $attributes['image'] = $request->file('image')->store('product');
+        }
+
+
         $product = Product::create($attributes);
+
+        $product->categories()->attach($category_ids);
+
+
+        
+        if ($request->hasFile('gallery')) {
+
+            $images = $request->file('gallery');
+
+            foreach ($images as $image) {
+                $product->images()->create([
+                    'image' =>  $image->store('product')
+                ]);  
+
+            }
+        }
 
         return (new ProductResource($product))
             ->additional([
@@ -55,9 +81,23 @@ class ProductsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductUpdateRequest $request, Product $product)
     {
-        //
+        $attributes = $request->validated();
+
+        $category_ids = $attributes['category_id'];
+        unset($attributes['category_id']);
+
+        $product->update($attributes);
+
+        $product->categories()->sync($category_ids);
+
+        return (new ProductResource($product))
+            ->additional([
+                'message' => 'Product updated successfully.',
+                'status' => 'success'
+            ])->response()
+            ->setStatusCode(Response::HTTP_OK);
     }
 
     /**

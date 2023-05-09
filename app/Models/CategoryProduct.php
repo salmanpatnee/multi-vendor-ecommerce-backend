@@ -10,4 +10,8 @@ class CategoryProduct extends Model
     use HasFactory;
 
     protected $table = "category_product";
+
+    protected $casts = [
+        'category_id' => 'array'
+     ];
 }

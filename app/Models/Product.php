@@ -25,6 +25,12 @@ class Product extends Model
         'is_offer' => 'boolean', 
         'is_deal' => 'boolean', 
         'is_active' => 'boolean', 
+        'tags' => 'array', 
+        'sizes' => 'array', 
+        'colors' => 'array', 
+        'qty' => 'float', 
+        'price' => 'float', 
+        'sale_price' => 'float', 
     ];
 
     public function sluggable(): array
@@ -46,6 +52,24 @@ class Product extends Model
         });
     }
 
+    public function setTagsAttribute($value)
+    {   
+        $tags_array = explode(",", $value);
+        $this->attributes['tags'] = json_encode($tags_array);
+    }
+
+    public function setSizesAttribute($value)
+    {   
+        $tags_array = explode(",", $value);
+        $this->attributes['sizes'] = json_encode($tags_array);
+    }
+
+    public function setColorsAttribute($value)
+    {   
+        $tags_array = explode(",", $value);
+        $this->attributes['colors'] = json_encode($tags_array);
+    }
+
     public function brand()
     {
         return $this->belongsTo(Brand::class);
@@ -65,4 +89,5 @@ class Product extends Model
     {
         return $this->hasMany(Image::class);
     }
+
 }

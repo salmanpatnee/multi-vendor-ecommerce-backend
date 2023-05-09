@@ -1406,13 +1406,13 @@
 							}
 						],
 						"url": {
-							"raw": "{{baseUrl}}/products/1",
+							"raw": "{{baseUrl}}/products/31",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"products",
-								"1"
+								"31"
 							],
 							"query": [
 								{
@@ -1498,6 +1498,11 @@
 								"key": "Content-Type",
 								"value": "application/json",
 								"type": "default"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "default"
 							}
 						],
 						"body": {
@@ -1505,13 +1510,103 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Demo",
+									"value": "Demo 10",
 									"type": "default"
 								},
 								{
 									"key": "price",
 									"value": "1500",
 									"type": "default"
+								},
+								{
+									"key": "sale_price",
+									"value": "1200",
+									"type": "default"
+								},
+								{
+									"key": "brand_id",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "category_id[0]",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "category_id[1]",
+									"value": "2",
+									"type": "default"
+								},
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "code",
+									"value": "P-11334",
+									"type": "default"
+								},
+								{
+									"key": "qty",
+									"value": "50",
+									"type": "default"
+								},
+								{
+									"key": "tags",
+									"value": "A,B,C",
+									"type": "default"
+								},
+								{
+									"key": "sizes",
+									"value": "S,M,L",
+									"type": "default"
+								},
+								{
+									"key": "colors",
+									"value": "Red,Green,Blue",
+									"type": "default"
+								},
+								{
+									"key": "short_desc",
+									"value": "A short description.",
+									"type": "default"
+								},
+								{
+									"key": "desc",
+									"value": "A brief description of the product",
+									"type": "default"
+								},
+								{
+									"key": "is_hot",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "is_featured",
+									"value": "1",
+									"type": "default"
+								},
+								{
+									"key": "is_offer",
+									"value": "0",
+									"type": "default"
+								},
+								{
+									"key": "is_deal",
+									"value": "0",
+									"type": "default"
+								},
+								{
+									"key": "gallery[0]",
+									"type": "file",
+									"src": "/C:/Users/Salman Abdul/Downloads/5358350_2741840.jpg"
+								},
+								{
+									"key": "gallery[1]",
+									"type": "file",
+									"src": "/C:/Users/Salman Abdul/Downloads/5757169_2965738.jpg"
 								}
 							]
 						},
@@ -1528,7 +1623,7 @@
 					"response": []
 				},
 				{
-					"name": "Categories Update",
+					"name": "Products Update",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1555,16 +1650,16 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\" : \"GYM\", \r\n    \"slug\": \"gym\"\r\n}"
+							"raw": "{\r\n    \"name\" : \"Demo 9 UPDATED\", \r\n    \"slug\": \"demo-9-updated\",\r\n    \"category_id\": [1],\r\n    \"price\": \"1500\", \r\n    \"sale_price\": \"1200\", \r\n    \"brand_id\": 1,  \r\n    \"user_id\": 1, \r\n    \"code\": \"P-11\", \r\n    \"qty\": 50, \r\n    \"tags\": \"A,V\", \r\n    \"sizes\": \"S,M\", \r\n    \"colors\": \"Red\", \r\n    \"short_desc\": \"\", \r\n    \"desc\": \"\", \r\n    \"is_hot\": 1\r\n\r\n}"
 						},
 						"url": {
-							"raw": "{{baseUrl}}/categories/4",
+							"raw": "{{baseUrl}}/products/31",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"categories",
-								"4"
+								"products",
+								"31"
 							]
 						}
 					},
