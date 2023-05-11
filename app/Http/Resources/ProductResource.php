@@ -31,6 +31,7 @@ class ProductResource extends JsonResource
             'short_desc' => $this->short_desc,
             'desc' => $this->desc,
             'image' => $this->image,
+            'gallery' => ImageResource::collection($this->images),
             'is_hot' => $this->is_hot,
             'is_featured' => $this->is_featured,
             'is_offer' => $this->is_offer,

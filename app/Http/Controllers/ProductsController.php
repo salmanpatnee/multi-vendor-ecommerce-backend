@@ -33,30 +33,30 @@ class ProductsController extends Controller
      */
     public function store(ProductStoreRequest $request)
     {
-
         $attributes = $request->validated();
-
+        
         $category_ids = $attributes['category_id'];
-        unset($attributes['category_id']);
-
+        unset($attributes['category_id'], $attributes['gallery']);
+        
+        // Upload single image.
         if ($request->hasFile('image')) {
             $attributes['image'] = $request->file('image')->store('product');
         }
 
-
         $product = Product::create($attributes);
-
+        
         $product->categories()->attach($category_ids);
 
 
-        
+        // Upload bulk images.
         if ($request->hasFile('gallery')) {
-
-            $images = $request->file('gallery');
-
+            
+            $images =  $request->file('gallery');
+            
             foreach ($images as $image) {
+                $path = $image->store('product');
                 $product->images()->create([
-                    'image' =>  $image->store('product')
+                    'image' =>  $path
                 ]);  
 
             }
@@ -88,6 +88,24 @@ class ProductsController extends Controller
         $category_ids = $attributes['category_id'];
         unset($attributes['category_id']);
 
+        // Upload single image.
+        if ($request->hasFile('image')) {
+            $attributes['image'] = $request->file('image')->store('product');
+        }
+        
+        if ($request->hasFile('gallery')) {
+            
+            $images =  $request->file('gallery');
+            
+            foreach ($images as $image) {
+                $path = $image->store('product');
+                $product->images()->create([
+                    'image' =>  $path
+                ]);  
+
+            }
+        }
+        
         $product->update($attributes);
 
         $product->categories()->sync($category_ids);

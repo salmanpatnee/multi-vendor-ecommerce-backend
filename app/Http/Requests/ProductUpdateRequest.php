@@ -37,6 +37,7 @@ class ProductUpdateRequest extends FormRequest
             'short_desc' => 'nullable|string', 
             'desc' => 'nullable|string', 
             'image' => 'nullable|image', 
+            'gallery.*' => 'nullable|image', 
             'is_hot' => 'nullable|boolean',
             'is_featured' => 'nullable|boolean',
             'is_offer' => 'nullable|boolean',
