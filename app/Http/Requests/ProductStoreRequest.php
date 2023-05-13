@@ -31,7 +31,7 @@ class ProductStoreRequest extends FormRequest
             'tags' => 'nullable|string', 
             'sizes' => 'nullable|string', 
             'colors' => 'nullable|string', 
-            'price' => 'required|numeric|gt:-1', 
+            'price' => 'required|numeric|gt:0', 
             'sale_price' => 'nullable|numeric|lt:price', 
             'short_desc' => 'nullable|string', 
             'desc' => 'nullable|string', 

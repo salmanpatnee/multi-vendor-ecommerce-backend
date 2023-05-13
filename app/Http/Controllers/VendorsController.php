@@ -26,7 +26,7 @@ class VendorsController extends Controller
     {
         $paginate = request('paginate', 10);
         $term     = request('search', '');
-        $active     = request('active', '');
+        $active     = request('active', null);
         $sortOrder  = request('sortOrder', 'desc');
         $orderBy    = request('orderBy', 'name');
 

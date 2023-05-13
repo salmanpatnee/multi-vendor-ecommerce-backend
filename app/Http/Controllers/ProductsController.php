@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-
+use Intervention\Image\Facades\Image as IImage;
 class ProductsController extends Controller
 {
     /**
@@ -34,13 +35,17 @@ class ProductsController extends Controller
     public function store(ProductStoreRequest $request)
     {
         $attributes = $request->validated();
-        
+
         $category_ids = $attributes['category_id'];
         unset($attributes['category_id'], $attributes['gallery']);
         
         // Upload single image.
         if ($request->hasFile('image')) {
-            $attributes['image'] = $request->file('image')->store('product');
+            $image = $request->file('image');
+            $image_name = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
+            IImage::make($image)->resize(800,100)->save('products/'.$image_name);
+            // return $image_name;
+            $attributes['image'] = 'products/'.$image_name;
         }
 
         $product = Product::create($attributes);
@@ -93,6 +98,7 @@ class ProductsController extends Controller
             $attributes['image'] = $request->file('image')->store('product');
         }
         
+        // Upload bulk images.
         if ($request->hasFile('gallery')) {
             
             $images =  $request->file('gallery');
