@@ -52,6 +52,11 @@ class Product extends Model
         });
     }
 
+    public function scopeActive($query, $active)
+    {   if(is_null($active)) return $query;
+        $query->where('is_active', '=', $active);
+    }
+    
     public function setTagsAttribute($value)
     {   
         $tags_array = explode(",", $value);

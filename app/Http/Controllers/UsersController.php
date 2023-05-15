@@ -102,7 +102,10 @@ class UsersController extends Controller
         $user->is_active = !$user->is_active;
         $user->update();
 
-        return response("Status updated.");
+        return response([
+            'message' => 'Status updated.',
+            'status'  => 'success'
+        ], Response::HTTP_OK);
 
     }
 }

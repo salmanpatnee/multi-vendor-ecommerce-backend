@@ -8,10 +8,21 @@ use App\Http\Resources\ProductResource;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 use Intervention\Image\Facades\Image as IImage;
+
 class ProductsController extends Controller
 {
+    /**
+     * Create the controller instance.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(User::class, 'product');
+    }
+
+    private $uploadDir = 'products/';
     /**
      * Display a listing of the resource.
      */
@@ -38,34 +49,17 @@ class ProductsController extends Controller
 
         $category_ids = $attributes['category_id'];
         unset($attributes['category_id'], $attributes['gallery']);
-        
+
         // Upload single image.
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $image_name = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
-            IImage::make($image)->resize(800,100)->save('products/'.$image_name);
-            // return $image_name;
-            $attributes['image'] = 'products/'.$image_name;
-        }
+        $attributes['image'] = $this->uploadImage('image', $this->uploadDir);
 
         $product = Product::create($attributes);
-        
+
+        // Attaching categories.
         $product->categories()->attach($category_ids);
 
-
         // Upload bulk images.
-        if ($request->hasFile('gallery')) {
-            
-            $images =  $request->file('gallery');
-            
-            foreach ($images as $image) {
-                $path = $image->store('product');
-                $product->images()->create([
-                    'image' =>  $path
-                ]);  
-
-            }
-        }
+        $this->uploadGalleryImages('gallery', $this->uploadDir, $product);
 
         return (new ProductResource($product))
             ->additional([
@@ -94,24 +88,11 @@ class ProductsController extends Controller
         unset($attributes['category_id']);
 
         // Upload single image.
-        if ($request->hasFile('image')) {
-            $attributes['image'] = $request->file('image')->store('product');
-        }
-        
-        // Upload bulk images.
-        if ($request->hasFile('gallery')) {
-            
-            $images =  $request->file('gallery');
-            
-            foreach ($images as $image) {
-                $path = $image->store('product');
-                $product->images()->create([
-                    'image' =>  $path
-                ]);  
+        $attributes['image'] = $this->uploadImage('image', $this->uploadDir);
 
-            }
-        }
-        
+        // Upload bulk images.
+        $this->uploadGalleryImages('gallery', $this->uploadDir, $product);
+
         $product->update($attributes);
 
         $product->categories()->sync($category_ids);
@@ -135,5 +116,70 @@ class ProductsController extends Controller
             'message' => 'Product deleted successfully.',
             'status'  => 'success'
         ], Response::HTTP_OK);
+    }
+
+    public function deleteProductImage(Product $product)
+    {
+        $this->authorize('delete', $product);
+
+        Storage::delete($product->image);
+       
+        $product->image = null;
+        $product->update();
+        
+
+        return response([
+            'message' => 'Image deleted.',
+            'status'  => 'success'
+        ], Response::HTTP_OK);
+    }
+
+    public function toggleActive(Product $product)
+    {
+        $this->authorize('update', $product);
+
+        $product->is_active = !$product->is_active;
+        $product->update();
+
+        return response([
+            'message' => 'Status updated.',
+            'status'  => 'success'
+        ], Response::HTTP_OK);
+
+    }
+
+    private function resizeAndStore($image, $path)
+    {
+        $image_name = hexdec(uniqid()) . '.' . $image->getClientOriginalExtension();
+        $destinationPath = storage_path("app/public/{$path}");
+        IImage::make($image)->resize(800, 800, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        })->save($destinationPath . $image_name);
+
+        return $image_name;
+    }
+
+    private function uploadImage($file, $path)
+    {
+        if (!request()->hasFile($file)) return null;
+
+        $image = request()->file($file);
+
+        return $path . $this->resizeAndStore($image, $path);
+    }
+
+    private function uploadGalleryImages($file, $path, Product $product)
+    {
+        if (!request()->hasFile($file)) return;
+
+        $images =  request()->file($file);
+
+        foreach ($images as $image) {
+
+            $product->images()->create([
+                'image' =>  $path . $this->resizeAndStore($image, $path)
+            ]);
+        }
     }
 }
