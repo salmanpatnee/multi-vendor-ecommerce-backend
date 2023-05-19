@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,7 +24,12 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'address' => $this->address,
             'is_active' => $this->is_active,
-            'role' => $this->roles->pluck('name'),
+            'role' => $this->roles->pluck('name'), 
+            // 'products' => ProductResource::collection($this->whenLoaded('products')),
+            // 'products' => ProductResource::collection($this->products),
+            'products_count' => $this->whenCounted('products'),
+            'products' => ProductResource::collection($this->whenLoaded('products')),
+
         ];
     }
 }

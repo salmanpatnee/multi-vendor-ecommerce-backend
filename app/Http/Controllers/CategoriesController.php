@@ -33,7 +33,7 @@ class CategoriesController extends Controller
             ->orderBy($orderBy, $sortOrder)
             ->paginate($paginate);
 
-        return CategoryResource::collection($categories);
+        return CategoryResource::collection($categories->loadCount('products'));
     }
 
     /**

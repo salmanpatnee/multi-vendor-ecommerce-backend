@@ -34,7 +34,7 @@ class VendorsController extends Controller
             ->orderBy($orderBy, $sortOrder)
             ->paginate($paginate);
 
-        return UserResource::collection($users);
+        return UserResource::collection($users->loadCount('products'));
     }
 
     /**
@@ -54,6 +54,8 @@ class VendorsController extends Controller
             throw new ModelNotFoundException();
         }
 
+        $user->products;
+        
         return new UserResource($user);
     }
 

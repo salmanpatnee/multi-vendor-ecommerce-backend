@@ -60,6 +60,7 @@ class UsersController extends Controller
      */
     public function show(User $user)
     {
+        $user->products;
         return new UserResource($user);
     }
 

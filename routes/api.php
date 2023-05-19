@@ -1,13 +1,18 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BrandProductController;
 use App\Http\Controllers\BrandsController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CategoryProductController;
 use App\Http\Controllers\ProductImagesController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\SlidesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\VendorsController;
+use App\Http\Controllers\WishlistController;
+use App\Models\CategoryProduct;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -46,6 +51,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('products/delete-image/{product}', [ProductsController::class, 'deleteProductImage']);
     Route::patch('products/toggle-active/{product}', [ProductsController::class, 'toggleActive']);
     Route::apiResource('products', ProductsController::class);
+    Route::apiResource('categories.products', CategoryProductController::class)->shallow()->only('index');
+    Route::apiResource('brands.products', BrandProductController::class)->shallow()->only('index');
     Route::apiResource('product-images', ProductImagesController::class)->only('destroy');
     Route::apiResource('slides', SlidesController::class); 
+    Route::apiResource('cart', CartController::class); 
+    Route::apiResource('wishlist', WishlistController::class); 
 });
