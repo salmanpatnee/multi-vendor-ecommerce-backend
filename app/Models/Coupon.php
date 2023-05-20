@@ -9,7 +9,7 @@ class Coupon extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'discount_type', 'amount', 'validity', 'limit_per_coupon', 'limit_per_user', 'is_active'];
+    protected $fillable = ['name', 'discount_type', 'value', 'validity', 'limit_per_coupon', 'limit_per_user', 'is_active'];
 
     /**
      * The attributes that should be cast.
@@ -21,4 +21,13 @@ class Coupon extends Model
         'validity' => 'date', 
         'is_active' => 'boolean'
     ];
+
+    public function scopeSearch($query, $term)
+    {
+        $term = "%$term%";
+
+        $query->where(function ($query) use ($term) {
+            $query->where('name', 'like', $term);
+        });
+    }
 }

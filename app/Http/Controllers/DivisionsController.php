@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CouponStoreRequest;
-use App\Http\Requests\CouponUpdateRequest;
-use App\Http\Resources\CouponResource;
-use App\Models\Coupon;
+use App\Http\Requests\DivisionStoreRequest;
+use App\Http\Requests\DivisionUpdateRequest;
+use App\Http\Resources\DivisionResource;
+use App\Models\Division;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CouponController extends Controller
+class DivisionsController extends Controller
 {
+
     /**
      * Create the controller instance.
      */
     public function __construct()
     {
-        $this->authorizeResource(Coupon::class, 'coupon');
+        $this->authorizeResource(Division::class, 'division');
     }
+
 
     /**
      * Display a listing of the resource.
@@ -26,25 +28,28 @@ class CouponController extends Controller
     {
         $paginate = request('paginate', 10);
         $term     = request('search', '');
+        $sortOrder  = request('sortOrder', 'desc');
+        $orderBy    = request('orderBy', 'name');
 
-        $coupons = Coupon::search($term)
+        $divisions = Division::search($term)
+            ->orderBy($orderBy, $sortOrder)
             ->paginate($paginate);
 
-        return CouponResource::collection($coupons);
+        return DivisionResource::collection($divisions);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CouponStoreRequest $request)
+    public function store(DivisionStoreRequest $request)
     {
         $attributes = $request->validated();
 
-        $coupon = Coupon::create($attributes);
+        $division = Division::create($attributes);
 
-        return (new CouponResource($coupon))
+        return (new DivisionResource($division))
             ->additional([
-                'message' => 'Coupon created successfully.',
+                'message' => 'Division created successfully.',
                 'status' => 'success'
             ])->response()
             ->setStatusCode(Response::HTTP_OK);
@@ -53,23 +58,23 @@ class CouponController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Coupon $coupon)
+    public function show(Division $division)
     {
-        return new CouponResource($coupon);
+        return new DivisionResource($division);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CouponUpdateRequest $request, Coupon $coupon)
+    public function update(DivisionUpdateRequest $request, Division $division)
     {
         $attributes = $request->validated();
 
-        $coupon->update($attributes);
+        $division->update($attributes);
 
-        return (new CouponResource($coupon))
+        return (new DivisionResource($division))
             ->additional([
-                'message' => 'Coupon updated successfully.',
+                'message' => 'Division updated successfully.',
                 'status' => 'success'
             ])->response()
             ->setStatusCode(Response::HTTP_OK);
@@ -78,12 +83,12 @@ class CouponController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Coupon $coupon)
+    public function destroy(Division $division)
     {
-        $coupon->delete();
+        $division->delete();
 
         return response([
-            'message' => 'Coupon deleted successfully.',
+            'message' => 'Division deleted successfully.',
             'status'  => 'success'
         ], Response::HTTP_OK);
     }

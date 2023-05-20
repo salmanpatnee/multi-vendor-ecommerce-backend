@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CouponStoreRequest;
-use App\Http\Requests\CouponUpdateRequest;
-use App\Http\Resources\CouponResource;
-use App\Models\Coupon;
+use App\Http\Requests\DistrictStoreRequest;
+use App\Http\Requests\DistrictUpdateRequest;
+use App\Http\Resources\DistrictResource;
+use App\Models\District;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CouponController extends Controller
+class DistrictController extends Controller
 {
+
     /**
      * Create the controller instance.
      */
     public function __construct()
     {
-        $this->authorizeResource(Coupon::class, 'coupon');
+        $this->authorizeResource(District::class, 'district');
     }
 
     /**
@@ -26,25 +27,28 @@ class CouponController extends Controller
     {
         $paginate = request('paginate', 10);
         $term     = request('search', '');
+        $sortOrder  = request('sortOrder', 'desc');
+        $orderBy    = request('orderBy', 'name');
 
-        $coupons = Coupon::search($term)
+        $districts = District::search($term)
+            ->orderBy($orderBy, $sortOrder)
             ->paginate($paginate);
 
-        return CouponResource::collection($coupons);
+        return DistrictResource::collection($districts);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CouponStoreRequest $request)
+    public function store(DistrictStoreRequest $request)
     {
         $attributes = $request->validated();
 
-        $coupon = Coupon::create($attributes);
+        $district = District::create($attributes);
 
-        return (new CouponResource($coupon))
+        return (new DistrictResource($district))
             ->additional([
-                'message' => 'Coupon created successfully.',
+                'message' => 'District created successfully.',
                 'status' => 'success'
             ])->response()
             ->setStatusCode(Response::HTTP_OK);
@@ -53,23 +57,23 @@ class CouponController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Coupon $coupon)
+    public function show(District $district)
     {
-        return new CouponResource($coupon);
+        return new DistrictResource($district);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CouponUpdateRequest $request, Coupon $coupon)
+    public function update(DistrictUpdateRequest $request, District $district)
     {
         $attributes = $request->validated();
 
-        $coupon->update($attributes);
+        $district->update($attributes);
 
-        return (new CouponResource($coupon))
+        return (new DistrictResource($district))
             ->additional([
-                'message' => 'Coupon updated successfully.',
+                'message' => 'District updated successfully.',
                 'status' => 'success'
             ])->response()
             ->setStatusCode(Response::HTTP_OK);
@@ -78,12 +82,12 @@ class CouponController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Coupon $coupon)
+    public function destroy(District $district)
     {
-        $coupon->delete();
+        $district->delete();
 
         return response([
-            'message' => 'Coupon deleted successfully.',
+            'message' => 'District deleted successfully.',
             'status'  => 'success'
         ], Response::HTTP_OK);
     }

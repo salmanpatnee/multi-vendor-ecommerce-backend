@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('coupons', function (Blueprint $table) {
+        Schema::create('divisions', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->enum('discount_type', ['Fixed', 'Percentage']);
-            $table->integer('value');
-            $table->date('validity');
-            $table->integer('limit_per_coupon')->nullable();
-            $table->integer('limit_per_user')->nullable();
-            $table->boolean('is_active')->default(1);
             $table->timestamps();
         });
     }
@@ -29,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('coupons');
+        Schema::dropIfExists('divisions');
     }
 };

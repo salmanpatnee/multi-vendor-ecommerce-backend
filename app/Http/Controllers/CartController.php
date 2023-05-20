@@ -6,11 +6,15 @@ use App\Http\Requests\CartStoreRequest;
 use App\Http\Requests\CartUpdateRequest;
 use App\Http\Resources\CartResource;
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
+
 class CartController extends Controller
 {
     public function __construct()
@@ -44,9 +48,9 @@ class CartController extends Controller
     public function store(CartStoreRequest $request)
     {
         $attributes = $request->validated();
-        
+
         $product = Product::find($attributes['product_id']);
-        
+
 
         if (!$product->qty) {
             return response([
@@ -59,7 +63,7 @@ class CartController extends Controller
             ->where('user_id', $attributes['user_id'])->first();
 
         if ($productInCart) {
-            
+
             if (($attributes['qty']) > $product->qty) {
 
                 return response([
@@ -121,18 +125,17 @@ class CartController extends Controller
         $product = Product::findOrFail($cart->product->id);
 
         $attributes['sub_total'] = $attributes['quantity'] * $cart->unit_price;
-     
-      
-        
-        if($cart->quantity < $attributes['quantity']){
+
+
+
+        if ($cart->quantity < $attributes['quantity']) {
             $quantity = $attributes['quantity'] - $cart->quantity;
 
             $product->update([
                 'qty' => $product->qty - $quantity
             ]);
-
         } else {
-            
+
             $quantity = $cart->quantity - $attributes['quantity'];
 
             $product->update([
@@ -140,7 +143,7 @@ class CartController extends Controller
             ]);
         }
 
-      
+
         $cart->update($attributes);
 
         return response([
@@ -166,5 +169,64 @@ class CartController extends Controller
             'message' => 'Item deleted successfully.',
             'status'  => 'success'
         ], Response::HTTP_OK);
+    }
+
+    public function applyCoupon(Request $request)
+    {
+        // Store in session
+        $coupon = Coupon::where('name', '=', $request->coupon)
+            ->whereDate('validity', '>=', Carbon::now()->format('Y-m-d'))
+            ->first();
+
+        if ($coupon) {
+
+            $cartSubTotal   = Cart::where('user_id', Auth::id())
+                ->sum('sub_total');
+            $discountAmount = 0;
+
+            if ($coupon->discount_type === 'Fixed') {
+                $discountAmount = $cartSubTotal - $coupon->value;
+            } else {
+                $discountAmount = round($cartSubTotal * $coupon->value / 100);
+            }
+
+            Session::put('coupon', [
+                'coupon'         => $coupon->name,
+                'value'          => $coupon->value,
+                'discountType'   => $coupon->discount_type,
+                'cartSubTotal'   => $cartSubTotal,
+                'discountAmount' => $discountAmount,
+            ]);
+
+            return response()->json([
+                'coupon'         => $coupon->name,
+                'value'          => $coupon->value,
+                'discountType'   => $coupon->discount_type,
+                'cartSubTotal'   => $cartSubTotal,
+                'discountAmount' => $discountAmount,
+                'status'         => 'success',
+                'message'        => 'Coupon applied.',
+            ]);
+        } else {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Coupon is not valid.',
+            ]);
+        }
+    }
+
+    public function removeCoupon()
+    {
+        Session::forget('coupon');
+
+        $cartSubTotal = Cart::where('user_id', Auth::id())
+                ->sum('sub_total');
+        
+        return response()->json([
+            'cartSubTotal'   => $cartSubTotal,
+            'status'         => 'success',
+            'message'        => 'Coupon removed successfully.',
+        ]);
+
     }
 }
