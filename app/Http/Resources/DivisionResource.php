@@ -16,7 +16,8 @@ class DivisionResource extends JsonResource
     {
         return [
             'id' => $this->id, 
-            'name' => $this->name
+            'name' => $this->name, 
+            'districts' => DistrictResource::collection($this->districts)
         ];
     }
 }

@@ -17,7 +17,7 @@ class DistrictResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'division' => new DivisionResource($this->division), 
+            'shipping_areas' => ShippingAreaResource::collection($this->shippingAreas)
         ];
     }
 }

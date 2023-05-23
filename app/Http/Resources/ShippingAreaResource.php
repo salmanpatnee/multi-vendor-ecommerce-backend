@@ -16,8 +16,7 @@ class ShippingAreaResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'district' => new DistrictResource($this->district), 
+            'name' => $this->name, 
         ];
     }
 }

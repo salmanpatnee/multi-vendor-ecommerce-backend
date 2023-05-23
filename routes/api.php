@@ -6,6 +6,7 @@ use App\Http\Controllers\BrandsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CategoryProductController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DivisionsController;
@@ -67,4 +68,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('divisions', DivisionsController::class)->except('destroy');
     Route::apiResource('districts', DistrictController::class)->except('destroy');
     Route::apiResource('shipping-areas', ShippingAreasController::class)->except('destroy');
+    Route::post('checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 });
+Route::get('checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+Route::post('checkout/webhook', [CheckoutController::class, 'webhook'])->name('checkout.webhook');

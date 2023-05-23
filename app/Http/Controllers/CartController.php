@@ -26,7 +26,11 @@ class CartController extends Controller
      */
     public function index()
     {
+        $coupon = Session::get('coupon');
+        return $coupon;
         $user_id = Auth::id();
+
+        
 
         $cart = Cart::Where('user_id', $user_id)
             ->get();
@@ -173,6 +177,8 @@ class CartController extends Controller
 
     public function applyCoupon(Request $request)
     {
+           return 	Session::all();
+        
         // Store in session
         $coupon = Coupon::where('name', '=', $request->coupon)
             ->whereDate('validity', '>=', Carbon::now()->format('Y-m-d'))

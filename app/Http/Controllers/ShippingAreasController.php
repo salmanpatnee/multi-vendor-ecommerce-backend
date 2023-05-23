@@ -17,7 +17,7 @@ class ShippingAreasController extends Controller
      */
     public function __construct()
     {
-        $this->authorizeResource(ShippingAreaPolicy::class, 'shippingArea');
+        $this->authorizeResource(ShippingArea::class, 'shippingArea');
     }
 
     /**

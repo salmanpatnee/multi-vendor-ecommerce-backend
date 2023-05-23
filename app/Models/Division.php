@@ -20,8 +20,8 @@ class Division extends Model
         });
     }
 
-    public function district()
+    public function districts()
     {
-        return $this->hasMany(Division::class);
+        return $this->hasMany(District::class);
     }
 }
